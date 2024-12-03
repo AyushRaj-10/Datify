@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header.nav {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 36px;
+    color: #ff4c4c;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-size: 14px;
+    color: #333;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f8f8f8;
+}
+
+button {
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    background: linear-gradient(45deg, #ff5858, #ff9e44);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+p {
+    text-align: center;
+    font-size: 14px;
+}
+
+a {
+    color: #ff5858;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="nav">
+            <h1>Create Your Account</h1>
+        </header>
+
+        <main>
+            <section id="signup-section">
+                <h2>Sign Up</h2>
+                <form id="signupForm">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <!-- College Name -->
+                <label for="college">College Name:</label>
+                <input type="text" id="college" name="college" placeholder="Enter your college name" required>
+                 <!-- Gender -->
+                 <label for="gender">Gender:</label>
+                 <select id="gender" name="gender" required>
+                     <option value="">Select your gender</option>
+                     <option value="male">Male</option>
+                     <option value="female">Female</option>
+                     <option value="other">Other</option>
+                 </select>
+                 <label for="insta">Insta Id:</label>
+                 <input type="text" id="insta" name="password" insta>
+
+                 <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+
+
+                   
+
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+
+                    <button type="submit">Sign Up</button>
+                </form>
+
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </section>
+        </main>
+    </div>
+
+    <script >// Handle form submission (for demonstration purposes)
+        const signupForm = document.getElementById('signupForm');
+        
+        signupForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+        
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const college = document.getElementById('college').value.trim();
+            const gender = document.getElementById('gender').value.trim();
+            const insta = document.getElementById('insta').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+        
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+            } else {
+                alert(`Account created successfully!\nName: ${name}\nEmail: ${email}`);
+                // Optionally: Send data to a server or save to local storage
+            }
+        });
+        </script>
+</body>
+</html>

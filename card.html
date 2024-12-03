@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smooth Tinder Swipe Cards</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    .card-container {
+      position: relative;
+      width: 300px;
+      height: 400px;
+    }
+
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 24px;
+      color: #333;
+      cursor: grab;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card img {
+      height: 100%;
+      width: 100%;
+      border-radius: 10px 10px 0 0;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .card .details {
+      padding: 10px;
+      text-align: center;
+      background-color: #fff;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .card .details span {
+      display: block;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .card .details .bio {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .card::before,
+    .card::after {
+      content: '♥';
+      font-size: 80px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card::before {
+      left: 20px;
+      color: red;
+    }
+
+    .card::after {
+      right: 20px;
+      color: green;
+    }
+
+    .card.dragging-left::before {
+      opacity: 1;
+    }
+
+    .card.dragging-right::after {
+      opacity: 1;
+    }
+
+    .card.hidden {
+      visibility: hidden;
+    }
+
+    .card-container .card:not(:first-child) {
+      transform: scale(0.95);
+    }
+
+    .card-container .card:not(:first-child).active {
+      transform: scale(1);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card-container">
+    <div class="card">
+      <img src="/src/girl1.jpg" alt="">
+      <div class="details">
+        <span>Mia Rhodes</span>
+        <span class="bio">Age: 25 | Loves hiking and photography</span>
+      </div>
+    </div>
+    <div class="card">
+      <img src="/src/girl2.jpg" alt="">
+      <div class="details">
+        <span>Danny Elfie</span>
+        <span class="bio">Age: 28 | Passionate about art and design</span>
+      </div>
+    </div>
+    <div class="card">
+      <img src="/src/girl3.jpg" alt="">
+      <div class="details">
+        <span>Angela Singh</span>
+        <span class="bio">Age: 30 | Enjoys traveling and cooking</span>
+      </div>
+    </div>
+  </div>
+  <script>
+    const cards = document.querySelectorAll(".card");
+    const container = document.querySelector(".card-container");
+
+    let isDragging = false;
+
+    const setupCardStack = () => {
+      cards.forEach((card, index) => {
+        card.style.zIndex = cards.length - index;
+        if (index > 0) {
+          card.classList.add("hidden");
+        }
+      });
+    };
+
+    cards.forEach((card, index) => {
+      let startX, startY, currentX, currentY;
+
+      const onDragStart = (event) => {
+        isDragging = true;
+        startX = event.clientX || event.touches[0].clientX;
+        startY = event.clientY || event.touches[0].clientY;
+        card.style.transition = "none";
+      };
+
+      const onDrag = (event) => {
+        if (!isDragging) return;
+
+        currentX = event.clientX || event.touches[0].clientX;
+        currentY = event.clientY || event.touches[0].clientY;
+
+        const translateX = currentX - startX;
+        const translateY = currentY - startY;
+
+        card.style.transform = `translate(${translateX}px, ${translateY}px) rotate(${translateX * 0.05}deg)`;
+
+        card.classList.toggle("dragging-left", translateX < -50);
+        card.classList.toggle("dragging-right", translateX > 50);
+      };
+
+      const onDragEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.style.transition = "transform 0.3s ease";
+
+        const translateX = currentX - startX;
+
+        card.classList.remove("dragging-left", "dragging-right");
+
+        if (translateX > 150 || translateX < -150) {
+          const direction = translateX > 0 ? 1000 : -1000;
+          card.style.transform = `translate(${direction}px, 0)`;
+          setTimeout(() => {
+            card.remove();
+            revealNextCard();
+          }, 300);
+        } else {
+          card.style.transform = "translate(0, 0)";
+        }
+      };
+
+      const revealNextCard = () => {
+        const nextCard = container.querySelector(".card.hidden");
+        if (nextCard) {
+          nextCard.classList.remove("hidden");
+          nextCard.classList.add("active");
+        }
+      };
+
+      card.addEventListener("mousedown", onDragStart);
+      card.addEventListener("mousemove", onDrag);
+      card.addEventListener("mouseup", onDragEnd);
+
+      card.addEventListener("touchstart", onDragStart);
+      card.addEventListener("touchmove", onDrag);
+      card.addEventListener("touchend", onDragEnd);
+    });
+
+    setupCardStack();
+  </script>
+</body>
+
+</html>
