@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -111,7 +111,6 @@
             font-size: 1.7rem;
             color: #f6d365;
         }
-
     </style>
 </head>
 
@@ -129,16 +128,30 @@
     <div id="postsContainer"></div>
 
     <script>
-        // Initialize confessions array for demo purposes
-        let confessions = [];
+        // Initialize confessions array
+        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+
+        // Load confessions on page load
+        window.onload = function () {
+            displayConfessions();
+        };
 
         // Function to submit a confession
         function submitPost() {
             const message = document.getElementById('userInput').value.trim();
             if (message) {
                 confessions.push(message);
-                document.getElementById('userInput').value = '';  // Clear the input
-                displayConfessions();  // Refresh the confessions list
+
+                // Keep only the last 50 confessions
+                if (confessions.length > 50) {
+                    confessions = confessions.slice(-50);
+                }
+
+                // Save to localStorage
+                localStorage.setItem('confessions', JSON.stringify(confessions));
+
+                document.getElementById('userInput').value = ''; // Clear the input
+                displayConfessions(); // Refresh the confessions list
             } else {
                 alert("Please write something before submitting.");
             }
@@ -147,7 +160,7 @@
         // Function to display confessions
         function displayConfessions() {
             const container = document.getElementById('postsContainer');
-            container.innerHTML = '';  // Clear the container before updating
+            container.innerHTML = ''; // Clear the container before updating
 
             confessions.forEach(confession => {
                 const postElement = document.createElement('div');
@@ -156,7 +169,6 @@
                 container.appendChild(postElement);
             });
         }
-
     </script>
 
 </body>
