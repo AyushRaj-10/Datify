@@ -85,7 +85,7 @@ function Login() {
           {/* Create Account Link */}
           <div className="create mt-6 flex justify-center">
             <a
-              href="/register"
+              href="/"
               className="text-orange-600 hover:text-pink-500 text-sm font-medium"
             >
               Create Your Account
