@@ -54,7 +54,7 @@ const SwipeCard = () => {
     setTimeout(() => {
       setChatMessages((prevMessages) => [
         ...prevMessages,
-        { from: "chatbot", message: "Sorry! Your virtual partner also rejects you." },
+        { from: "chatbot", message: "Sorry! You Got rejected by your virtual partner" },
       ]);
     }, 1000);
   };
