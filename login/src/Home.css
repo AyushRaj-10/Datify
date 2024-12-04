@@ -307,6 +307,9 @@
   .couples-img-mobile {
     display: none;
   }
+
+
+
   @media (max-width: 1230px) {
     .title {
       font-size: 3rem;

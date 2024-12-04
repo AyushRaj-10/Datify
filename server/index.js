@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
+const bcrypt = require("bcrypt"); // Import bcrypt
 const userModel = require("./models/datify");
 const Confession = require('./models/confession');
 
@@ -42,24 +43,30 @@ mongoose.connect("mongodb://127.0.0.1:27017/datify", {
 // ** API Endpoints **
 
 // Register route
-app.post("/register", upload.single("photo"), (req, res) => {
+app.post("/register", upload.single("photo"), async (req, res) => {
   const { name, email, college, gender, insta, password, age, bio } = req.body;
   const photo = req.file ? req.file.filename : null; // Use the filename from multer
 
-  userModel
-    .create({
+  try {
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+
+    const user = await userModel.create({
       name,
       email,
       college,
       gender,
       insta,
-      password,
+      password: hashedPassword, // Store the hashed password
       photo,
       age,
       bio,
-    })
-    .then((user) => res.json({ message: "User registered successfully", user }))
-    .catch((err) => res.status(500).json({ error: err.message }));
+    });
+
+    res.json({ message: "User registered successfully", user });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Login route
@@ -69,11 +76,17 @@ app.post("/login", (req, res) => {
     .findOne({ email })
     .then((user) => {
       if (user) {
-        if (user.password === password) {
-          res.json("success");
-        } else {
-          res.json("password is incorrect");
-        }
+        // Compare hashed password with entered password
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          if (isMatch) {
+            res.json("success");
+          } else {
+            res.json("password is incorrect");
+          }
+        });
       } else {
         res.json("no record existed");
       }

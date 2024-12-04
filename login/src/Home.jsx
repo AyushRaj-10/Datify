@@ -90,7 +90,7 @@ const App = () => {
               <li><Link to="/">Home</Link></li>
               <li><Link to="/card">Your Match</Link></li>
               <li><Link to="/contactus">Contact</Link></li>
-              <li><Link to="/confess">Confess</Link></li> {/* New link added in footer */}
+              <li><Link to="/confess">Confess</Link></li> 
             </ul>
           </div>
           <div className="footer-right">
