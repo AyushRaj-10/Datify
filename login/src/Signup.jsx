@@ -63,7 +63,7 @@ function Signup() {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-100 via-purple-100 to-indigo-100">
       <div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-lg">
         <header className="text-center mb-8">
-          <h1 className="text-5xl font-semibold text-pink-500">Create Your Account</h1>
+          <h1 className="text-5xl font-semibold text-pink-500">Create Datify Account</h1>
         </header>
 
         <main>
