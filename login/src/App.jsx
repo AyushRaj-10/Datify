@@ -6,6 +6,7 @@ import Home from './Home';
 import ContactUs from './contactus';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SwipeCard from './card';
+import ConfessionPage from './confession';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/home' element={<Home />} />
         <Route path='/contactus' element={<ContactUs />} />
         <Route path='/card' element={<SwipeCard />} />
+        <Route path='/confess' element={<ConfessionPage />} />
       </Routes>
     </BrowserRouter>
   )
