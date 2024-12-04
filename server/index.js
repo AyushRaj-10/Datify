@@ -89,6 +89,7 @@ app.get("/api/users", (req, res) => {
     .catch((err) => res.status(500).json({ error: err.message }));
 });
 
+// POST confession route
 app.post('/api/confessions', async (req, res) => {
   try {
       const { message } = req.body;
@@ -103,6 +104,7 @@ app.post('/api/confessions', async (req, res) => {
   }
 });
 
+// GET confessions route
 app.get('/confess', async (req, res) => {
   try {
       const confessions = await Confession.find().sort({ createdAt: -1 }).limit(50);
@@ -116,4 +118,4 @@ app.get('/confess', async (req, res) => {
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-});   
+});

@@ -6,23 +6,44 @@ const SwipeCard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showInsta, setShowInsta] = useState(null);
   const [stopShowingCards, setStopShowingCards] = useState(false);
-  const [matchMessage, setMatchMessage] = useState(null); // State to manage match message
+  const [matchMessage, setMatchMessage] = useState(null);
+  const [chatbotVisible, setChatbotVisible] = useState(false); // State to manage chatbot visibility
+  const [chatMessages, setChatMessages] = useState([]); // Store chat messages
 
   useEffect(() => {
     axios
       .get("http://localhost:3001/api/users")
-      .then((response) => setUsers(response.data.reverse())) // Show the newest card first
-      .catch((error) => console.error("Error fetching users", error));
+      .then((response) => setUsers(response.data.reverse()))
+      .catch((error) => {
+        console.error("Error fetching users", error);
+        setUsers([]); // Optional: set empty users array if error occurs
+      });
   }, []);
 
   const acceptUser = (user) => {
     setShowInsta(user.insta); // Show Instagram if accepted
     setStopShowingCards(true); // Stop showing more cards
-    setMatchMessage(`Congratulations! You've found a match with ${user.name}. 🎉`); // Set the custom match message
+    setMatchMessage(`Congratulations! You've found a match with ${user.name}. 🎉`);
   };
 
   const rejectUser = () => {
-    setCurrentIndex((prevIndex) => prevIndex + 1); // Go to next user when rejected
+    // If we reach the end of the cards, show the chatbot
+    if (currentIndex + 1 >= users.length) {
+      setChatbotVisible(true);
+      setStopShowingCards(true);
+    } else {
+      setCurrentIndex((prevIndex) => prevIndex + 1); // Go to next user when rejected
+    }
+  };
+
+  const sendChatMessage = (message) => {
+    setChatMessages([...chatMessages, { from: "user", message }]);
+    setTimeout(() => {
+      setChatMessages((prevMessages) => [
+        ...prevMessages,
+        { from: "chatbot", message: "Sorry! Your virtual partner also rejects you." },
+      ]);
+    }, 1000); // Simulate chatbot response after 1 second
   };
 
   if (users.length === 0) {
@@ -46,6 +67,34 @@ const SwipeCard = () => {
             </a>
           </div>
         )}
+
+        {/* Chatbot Section */}
+        {chatbotVisible && (
+          <div className="bg-white text-gray-800 p-6 rounded-lg shadow-md w-full max-w-md mt-8">
+            <h2 className="text-xl font-semibold text-center mb-4">Chat with your virtual partner</h2>
+            <div className="overflow-y-auto max-h-60 mb-4">
+              {chatMessages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`text-sm ${msg.from === "user" ? "text-right" : "text-left"}`}
+                >
+                  <p>{msg.message}</p>
+                </div>
+              ))}
+            </div>
+            <input
+              type="text"
+              placeholder="Send a message"
+              className="w-full px-4 py-2 border rounded-md"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && e.target.value.trim()) {
+                  sendChatMessage(e.target.value);
+                  e.target.value = "";
+                }
+              }}
+            />
+          </div>
+        )}
       </div>
     );
   }
@@ -56,11 +105,12 @@ const SwipeCard = () => {
     <div className="bg-gradient-to-r from-pink-400 to-orange-500 min-h-screen flex flex-col items-center justify-center text-white p-6">
       {/* Navbar */}
       <nav className="bg-white shadow-md p-4 fixed w-full top-0 left-0 z-50">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-evenly items-center">
           <a href="/home" className="text-2xl font-bold text-pink-500 hover:text-pink-700">Home</a>
           <div className="space-x-6">
             <a href="/card" className="text-lg text-gray-700 hover:text-pink-600">About</a>
             <a href="/contactus" className="text-lg text-gray-700 hover:text-pink-600">Contact Us</a>
+            <a href="/confess" className="text-lg text-gray-700 hover:text-pink-600">Confessions</a>
           </div>
         </div>
       </nav>

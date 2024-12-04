@@ -50,6 +50,11 @@ const ContactUs = () => {
                 Contact
               </Link>
             </li>
+            <li>
+              <Link to="/confess" className="text-gray-700 font-medium hover:text-teal-700">
+                confessions
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>

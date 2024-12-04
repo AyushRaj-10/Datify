@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import './Home.css'
+import './Home.css';
 
 // Direct path from public folder
 const App = () => {
@@ -33,6 +33,9 @@ const App = () => {
             </li>
             <li className="list">
               <Link to="/contactus" className="link">Contact</Link>
+            </li>
+            <li className="list">
+              <Link to="/confess" className="link">Confess</Link> {/* New link added */}
             </li>
             <div className="btn-container">
               <li className="list">
@@ -94,6 +97,7 @@ const App = () => {
               <li><Link to="/">Home</Link></li>
               <li><Link to="/card">Your Match</Link></li>
               <li><Link to="/contactus">Contact</Link></li>
+              <li><Link to="/confess">Confess</Link></li> {/* New link added in footer */}
             </ul>
           </div>
           <div className="footer-right">
