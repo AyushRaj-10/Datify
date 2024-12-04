@@ -16,7 +16,7 @@ const App = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await fetch('http://localhost:3001/api/confessions');
+      const response = await fetch('http://localhost:3001/confess');
       if (!response.ok) throw new Error('Failed to fetch confessions');
       const data = await response.json();
       setConfessions(data);

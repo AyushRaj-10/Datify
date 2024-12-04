@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const userModel = require("./models/datify");
+const Confession = require('./models/confession');
 
 const app = express();
 const PORT = 3001;
@@ -86,6 +87,30 @@ app.get("/api/users", (req, res) => {
     .find({}, "name age photo bio insta") // Fetch only name, age, photo, and bio
     .then((users) => res.json(users))
     .catch((err) => res.status(500).json({ error: err.message }));
+});
+
+app.post('/api/confessions', async (req, res) => {
+  try {
+      const { message } = req.body;
+      if (!message) return res.status(400).json({ error: 'Message is required' });
+
+      const newConfession = new Confession({ message });
+      await newConfession.save();
+      res.status(201).json(newConfession);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+app.get('/confess', async (req, res) => {
+  try {
+      const confessions = await Confession.find().sort({ createdAt: -1 }).limit(50);
+      res.json(confessions);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Something went wrong' });
+  }
 });
 
 // Start the server
