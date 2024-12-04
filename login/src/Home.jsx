@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import './Home.css';
 
-// Direct path from public folder
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Assuming the user is logged in, set to false if not
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -37,14 +37,7 @@ const App = () => {
             <li className="list">
               <Link to="/confess" className="link">Confess</Link> {/* New link added */}
             </li>
-            <div className="btn-container">
-              <li className="list">
-                <Link to="/login" className="btn btn-secondary">Login</Link>
-              </li>
-              <li className="list">
-                <Link to="/register" className="btn">Register</Link>
-              </li>
-            </div>
+
           </ul>
         </nav>
         <div className="container">

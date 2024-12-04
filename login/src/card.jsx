@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const SwipeCard = () => {
   const [users, setUsers] = useState([]);
@@ -7,32 +8,44 @@ const SwipeCard = () => {
   const [showInsta, setShowInsta] = useState(null);
   const [stopShowingCards, setStopShowingCards] = useState(false);
   const [matchMessage, setMatchMessage] = useState(null);
-  const [chatbotVisible, setChatbotVisible] = useState(false); // State to manage chatbot visibility
-  const [chatMessages, setChatMessages] = useState([]); // Store chat messages
+  const [chatbotVisible, setChatbotVisible] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [genderPreference, setGenderPreference] = useState(null); // State to store gender preference
+  const [filteredUsers, setFilteredUsers] = useState([]); // Store filtered users based on gender preference
 
   useEffect(() => {
     axios
       .get("http://localhost:3001/api/users")
-      .then((response) => setUsers(response.data.reverse()))
+      .then((response) => {
+        setUsers(response.data.reverse());
+      })
       .catch((error) => {
         console.error("Error fetching users", error);
         setUsers([]); // Optional: set empty users array if error occurs
       });
   }, []);
 
+  // Filter users based on gender preference
+  useEffect(() => {
+    if (genderPreference && users.length > 0) {
+      // Filter users where the gender matches the preferred gender
+      const filtered = users.filter((user) => user.gender === genderPreference);
+      setFilteredUsers(filtered); // Set filtered users to show
+    }
+  }, [genderPreference, users]);
+
   const acceptUser = (user) => {
-    setShowInsta(user.insta); // Show Instagram if accepted
-    setStopShowingCards(true); // Stop showing more cards
+    setShowInsta(user.insta);
+    setStopShowingCards(true);
     setMatchMessage(`Congratulations! You've found a match with ${user.name}. 🎉`);
   };
 
   const rejectUser = () => {
-    // If we reach the end of the cards, show the chatbot
-    if (currentIndex + 1 >= users.length) {
+    if (currentIndex + 1 >= filteredUsers.length) {
       setChatbotVisible(true);
       setStopShowingCards(true);
     } else {
-      setCurrentIndex((prevIndex) => prevIndex + 1); // Go to next user when rejected
+      setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
 
@@ -43,14 +56,39 @@ const SwipeCard = () => {
         ...prevMessages,
         { from: "chatbot", message: "Sorry! Your virtual partner also rejects you." },
       ]);
-    }, 1000); // Simulate chatbot response after 1 second
+    }, 1000);
   };
 
-  if (users.length === 0) {
-    return <p>Loading users...</p>;
+  if (!genderPreference) {
+    // Ask for gender preference if not set
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-pink-400 to-orange-500 text-white p-6 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-semibold mb-6 text-center">Select Your Gender Preference</h1>
+        <div className="flex space-x-6">
+          <button
+            onClick={() => setGenderPreference("female")}
+            className="bg-pink-500 text-white py-3 px-6 rounded-lg shadow-sm"
+          >
+            Female
+          </button>
+          <button
+            onClick={() => setGenderPreference("male")}
+            className="bg-blue-500 text-white py-3 px-6 rounded-lg shadow-sm"
+          >
+            Male
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  if (currentIndex >= users.length || stopShowingCards) {
+  if (filteredUsers.length === 0) {
+    return <p>No users available for the selected gender preference.</p>;
+  }
+
+  const currentUser = filteredUsers[currentIndex];
+
+  if (currentIndex >= filteredUsers.length || stopShowingCards) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-pink-400 to-orange-500 text-white p-6 rounded-lg shadow-lg">
         <h1 className="text-3xl font-semibold mb-6 text-center">{matchMessage}</h1>
@@ -99,18 +137,16 @@ const SwipeCard = () => {
     );
   }
 
-  const currentUser = users[currentIndex];
-
   return (
     <div className="bg-gradient-to-r from-pink-400 to-orange-500 min-h-screen flex flex-col items-center justify-center text-white p-6">
-      {/* Navbar */}
-      <nav className="bg-white shadow-md p-4 fixed w-full top-0 left-0 z-50">
-        <div className="flex justify-evenly items-center">
-          <a href="/home" className="text-2xl font-bold text-pink-500 hover:text-pink-700">Home</a>
-          <div className="space-x-6">
-            <a href="/card" className="text-lg text-gray-700 hover:text-pink-600">About</a>
-            <a href="/contactus" className="text-lg text-gray-700 hover:text-pink-600">Contact Us</a>
-            <a href="/confess" className="text-lg text-gray-700 hover:text-pink-600">Confessions</a>
+      {/* Navigation Bar */}
+      <nav className="bg-gradient-to-r from-purple-500 to-pink-500 w-full py-3 fixed top-0 z-50 shadow-md">
+        <div className="flex justify-between items-center max-w-7xl mx-auto px-6 space-x-8">
+          <Link to="/home" className="text-white text-lg font-bold hover:text-gray-300 transition duration-300">Home</Link>
+          <div className="flex space-x-8">
+            <Link to="/card" className="text-white text-lg font-semibold hover:text-gray-300 transition duration-300">Card</Link>
+            <Link to="/contactus" className="text-white text-lg font-semibold hover:text-gray-300 transition duration-300">Contact Us</Link>
+            <Link to="/confess" className="text-white text-lg font-semibold hover:text-gray-300 transition duration-300">Confess</Link>
           </div>
         </div>
       </nav>

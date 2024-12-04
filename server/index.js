@@ -84,7 +84,7 @@ app.post("/login", (req, res) => {
 // Fetch users route for Swipeable Cards
 app.get("/api/users", (req, res) => {
   userModel
-    .find({}, "name age photo bio insta") // Fetch only name, age, photo, and bio
+    .find({}, "name age photo bio insta gender") // Fetch only name, age, photo, and bio
     .then((users) => res.json(users))
     .catch((err) => res.status(500).json({ error: err.message }));
 });

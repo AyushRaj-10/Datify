@@ -63,7 +63,7 @@ const App = () => {
         <div className="flex justify-center space-x-6">
           <Link to="/home" className="text-amber-300 hover:text-yellow-400">Home</Link>
           <Link to="/contactus" className="text-amber-300 hover:text-yellow-400">Contact Us</Link>
-          <Link to="/matches" className="text-amber-300 hover:text-yellow-400">Your Matches</Link>
+          <Link to="/card" className="text-amber-300 hover:text-yellow-400">Your Matches</Link>
           <Link to="/confess" className="text-amber-300 hover:text-yellow-400">Confess</Link>
         </div>
       </nav>

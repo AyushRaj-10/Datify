@@ -42,7 +42,7 @@
   .list-items {
     display: flex;
     flex: 0.7;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     transition: 0.2s;
   }
@@ -52,9 +52,9 @@
   }
   
   .link {
-    color: var(--grey-color);
+    color: #2b3136;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 900;
     position: relative;
   }
   .link::before {
